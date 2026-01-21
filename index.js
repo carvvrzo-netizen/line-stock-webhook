@@ -7,16 +7,23 @@ app.get("/", (req, res) => {
   res.send("LINE webhook running ✅");
 });
 
-// webhook endpoint
 app.post("/webhook", (req, res) => {
-  console.log("LINE EVENT:", JSON.stringify(req.body, null, 2));
+
+  const event = req.body.events?.[0];
+
+  if (!event) {
+    return res.status(200).send("OK");
+  }
+
+  // ✅ GROUP ID อยู่ตรงนี้
+  if (event.source.type === "group") {
+    console.log("✅ GROUP ID =", event.source.groupId);
+  }
+
   res.status(200).send("OK");
 });
 
-// ⭐ สำคัญที่สุด ⭐
 const PORT = process.env.PORT || 8080;
-
-app.listen(1453, () => {
-  console.log("Server running on port", 1453);
+app.listen(PORT, () => {
+  console.log("Server running on", PORT);
 });
-
